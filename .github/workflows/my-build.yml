@@ -1,0 +1,47 @@
+name: My APK Build
+
+# Builds an installable (debug-signed) ConnectBot APK.
+# Run it from the Actions tab ("Run workflow"), or it runs on every push to main.
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Build OSS debug APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          persist-credentials: false
+
+      - name: Set up JDK
+        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
+
+      - name: Delete old Android SDK cmdline-tools
+        run: rm -rf "$ANDROID_HOME/cmdline-tools/latest"
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd # v4.0.4
+        with:
+          packages: 'cmdline-tools;latest platform-tools'
+
+      - name: Build APK
+        run: ./gradlew :app:assembleOssDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: connectbot-oss-debug-apk
+          path: app/build/outputs/apk/oss/debug/*.apk
+          if-no-files-found: error
