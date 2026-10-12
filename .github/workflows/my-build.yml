@@ -1,7 +1,12 @@
 name: My APK Build
 
-# Builds an installable (debug-signed) ConnectBot APK.
+# Builds an optimized ConnectBot APK for a Samsung Galaxy Z Fold 5
+# (64-bit ARM only, R8-shrunk release build).
 # Run it from the Actions tab ("Run workflow"), or it runs on every push to main.
+#
+# The APK is signed with signing/sideload.jks so each new build installs as an
+# update over the previous one. That key is committed to this public fork, so it
+# only identifies "my personal build"; it is not a secret.
 on:
   workflow_dispatch:
   push:
@@ -9,7 +14,7 @@ on:
 
 jobs:
   build:
-    name: Build OSS debug APK
+    name: Build Z Fold 5 release APK
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -37,11 +42,17 @@ jobs:
           packages: 'cmdline-tools;latest platform-tools'
 
       - name: Build APK
-        run: ./gradlew :app:assembleOssDebug
+        run: >
+          ./gradlew :app:assembleOssRelease
+          -PabiFilters=arm64-v8a
+          -PreleaseAppIdSuffix=.fold
+          -PkeystoreFile="$GITHUB_WORKSPACE/signing/sideload.jks"
+          -PkeystoreAlias=sideload
+          -PkeystorePassword=sideload-key
 
       - name: Upload APK
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: connectbot-oss-debug-apk
-          path: app/build/outputs/apk/oss/debug/*.apk
+          name: connectbot-zfold5-apk
+          path: app/build/outputs/apk/oss/release/*.apk
           if-no-files-found: error

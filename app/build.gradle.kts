@@ -138,7 +138,12 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         ndk {
-            abiFilters.addAll(listOf("x86", "x86_64", "armeabi-v7a", "arm64-v8a"))
+            // Pass -PabiFilters=arm64-v8a to package only the ABIs a specific device needs.
+            val abiOverride = providers.gradleProperty("abiFilters").orNull
+            abiFilters.addAll(
+                abiOverride?.split(",")?.map { it.trim() }
+                    ?: listOf("x86", "x86_64", "armeabi-v7a", "arm64-v8a"),
+            )
             debugSymbolLevel = "full"
         }
 
@@ -191,6 +196,11 @@ android {
 
             if (project.hasProperty("keystorePassword")) {
                 signingConfig = signingConfigs.getByName("release")
+            }
+
+            // Pass -PreleaseAppIdSuffix=.xyz to install alongside the official app.
+            providers.gradleProperty("releaseAppIdSuffix").orNull?.let {
+                applicationIdSuffix = it
             }
         }
 
