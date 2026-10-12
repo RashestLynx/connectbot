@@ -4,15 +4,10 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
   <path
-      android:pathData="M34,36L55,54L34,72"
+      android:pathData="M37,42L52,52L37,62"
       android:strokeColor="#FFFFFFFF"
-      android:strokeWidth="10"
-      android:strokeLineCap="round"
-      android:strokeLineJoin="round"/>
+      android:strokeWidth="5.5"/>
   <path
-      android:pathData="M73,33m-2,0a2,2 0,1 0,4 0a2,2 0,1 0,-4 0M82,43m-1.4,0a1.4,1.4 0,1 0,2.8 0a1.4,1.4 0,1 0,-2.8 0M64,26m-1.2,0a1.2,1.2 0,1 0,2.4 0a1.2,1.2 0,1 0,-2.4 0M84,28m-0.9,0a0.9,0.9 0,1 0,1.8 0a0.9,0.9 0,1 0,-1.8 0"
-      android:fillColor="#FFFFFFFF"/>
-  <path
-      android:pathData="M62.67,66H77.33A2.67,2.67 0,0 1,80 68.67V71.33A2.67,2.67 0,0 1,77.33 74H62.67A2.67,2.67 0,0 1,60 71.33V68.67A2.67,2.67 0,0 1,62.67 66Z"
+      android:pathData="M55,63H72V67H55Z"
       android:fillColor="#FFFFFFFF"/>
 </vector>
