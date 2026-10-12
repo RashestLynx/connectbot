@@ -18,7 +18,7 @@
  */
 -->
 <resources>
-	<string name="app_name" translatable="false">ConnectBot</string>
+	<string name="app_name" translatable="false">RigPilot Shell</string>
 
 	<!-- Placeholder for source port field. Should show  -->
 	<string name="portforward_source_port_placeholder">8080</string>
