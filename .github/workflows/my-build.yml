@@ -50,6 +50,16 @@ jobs:
           -PkeystoreAlias=sideload
           -PkeystorePassword=sideload-key
 
+      - name: Verify APK
+        run: |
+          BT="$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)"
+          for apk in app/build/outputs/apk/oss/release/*.apk; do
+            echo "== $apk"
+            "$BT/apksigner" verify --verbose --print-certs "$apk"
+            "$BT/aapt2" dump badging "$apk" | grep -E "^(package|sdkVersion|targetSdkVersion|native-code|split|uses-split|application:)" || true
+            "$BT/aapt2" dump xmltree --file AndroidManifest.xml "$apk" | grep -iE "split|requiredSplit|testOnly|isFeatureSplit" || true
+          done
+
       - name: Upload APK
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
